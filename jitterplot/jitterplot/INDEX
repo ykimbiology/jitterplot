@@ -1,0 +1,5 @@
+add_box                 jitterplot
+get_jitter              jitterplot
+jitterplot              jitterplot
+jitterplot-package      What the package does (short line) ~~ package
+                        title ~~
