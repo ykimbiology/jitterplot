@@ -4,4 +4,5 @@ Jitterplot is an R package for visualizing distributions, similar to the ones ge
 
 [Graphpad prism plot](http://www.graphpad.com/guides/prism/6/statistics/embim16.jpg)
 
-Example output of the jitterplot routine is shown [here](test.png)
+Example output of the jitterplot routine is shown beloww:
+![here](test.png)
