@@ -66,7 +66,55 @@ add_box <- function(x, pos, width) {
   segments(pos, xqt[2], pos, xqt[4], lwd=flwd*h$lwd)
 }
 
+get_jitter_gaussian <- function(x, amount) {
+  # Add noise sampled from a gaussian distribution using specified sd.
+    #Jitter based on normal distribution.
+    xnorm <- rnorm(length(x),mean=0.0, sd=amount)
+    #Re-sample if sampled point outside of specified width.
+    width <- 2.2*amount
+    for (i in 1:length(xnorm)) {
+      if (abs(xnorm[i]) > width) {
+          repeat {
+          xnorm[i] <- rnorm(1, mean=0.0, sd=amount)
+          if (abs(xnorm[i]) < width) { break }
+          }
+      }
+    }
+    
+    #dfactor <- 1/(abs(xnorm)^1)
+    dfactor <- 1
+    xj <- x + dfactor*xnorm
+    xj
+}
 
+get_jitter_exponential <- function(x, amount) {
+  # Spread of data points sampled from an exponential distribution.
+   xdistr <- rexp(length(x), rate=1/amount)
+   xsign <- rep(c(-1,1),length(x))
+   xsign <- xsign[1:length(x)]
+   xdistr <- xdistr*xsign  # To get both +/- numbers
+    #Re-sample if sampled point outside of specified width.
+#    width <- 2.2*amount
+#    for (i in 1:length(xnorm)) {
+#      if (abs(xnorm[i]) > width) {
+#          repeat {
+#          xnorm[i] <- rnorm(1, mean=0.0, sd=amount)
+#          if (abs(xnorm[i]) < width) { break }
+#          }
+#      }
+#    }
+    
+    #dfactor <- 1/(abs(xnorm)^1)
+    dfactor <- 1
+    xj <- x + dfactor*xdistr
+    xj
+}
+
+get_jitter_kernel <- function(x, amount) {
+  # Add noise sampled from gaussian.
+  # Also take into account how many neighboring points there are.
+  # The width of the distribution will depend on the size of neighbors.
+}
 
 jitterplot <- function(xlist, xlabel_list, ylabel) {
   # jitterplot(xlist)
@@ -95,7 +143,12 @@ jitterplot <- function(xlist, xlabel_list, ylabel) {
     pos <- i - 1.0
     x <- xlist[[xnames[i]]]
     print(c('Debug', xnames[i], pos))
-    points(jitter(rep(pos, length(x)), amount=0.2), x, col=xcol )
+    #xj <- jitter(rep(pos, length(x)), amount=0.2)
+    #xj <- get_jitter_gaussian(rep(pos,length(x)), amount=0.1)
+    xj <- get_jitter_exponential(rep(pos,length(x)), amount=0.05)
+
+    
+    points(xj, x, col=xcol,pch=19 )
     add_box(x, pos, 0.5)
     mtext(xlabel_list[i], at=pos, side=1,line=1, cex=2*h$cex) # cex should be same as cex.axis 
   }
