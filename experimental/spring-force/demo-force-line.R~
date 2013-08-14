@@ -1,0 +1,6 @@
+
+
+n <- 5
+x <- rnorm(n)
+y <- rep(0,n)
+plot(x,y)

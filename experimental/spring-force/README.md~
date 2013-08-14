@@ -1,0 +1,12 @@
+
+
+Balls are placed on a line.
+Spring forces are applied to each pair of balls.
+Balls want to be placed in the middle of the line.
+Run the simulation.
+
+Energy
+1) Repulsive between two balls
+   energy = (xi - xj)^(-alpha)
+2) Attraction to the center.
+   energy = (x - xc)^2
