@@ -90,19 +90,26 @@ get_jitter_gaussian <- function(x, amount) {
 get_jitter_exponential <- function(x, amount) {
   # Spread of data points sampled from an exponential distribution.
    xdistr <- rexp(length(x), rate=1/amount)
+   xdistr <- xdistr^1.2
    xsign <- rep(c(-1,1),length(x))
    xsign <- xsign[1:length(x)]
    xdistr <- xdistr*xsign  # To get both +/- numbers
     #Re-sample if sampled point outside of specified width.
-#    width <- 2.2*amount
-#    for (i in 1:length(xnorm)) {
-#      if (abs(xnorm[i]) > width) {
-#          repeat {
-#          xnorm[i] <- rnorm(1, mean=0.0, sd=amount)
-#          if (abs(xnorm[i]) < width) { break }
-#          }
-#      }
-#    }
+    width <- 2.2*amount
+    for (i in 1:length(xdistr)) {
+      if (abs(xdistr[i]) > width) {
+          repeat {
+
+          xsign <- 1
+          if (rnorm(1) < 0) {
+              xsign <- -1
+          }
+          xdistr[i] <- xsign*rexp(1, rate=1/amount)
+
+          if (abs(xdistr[i]) < width) { break }
+          }
+      }
+    }
     
     #dfactor <- 1/(abs(xnorm)^1)
     dfactor <- 1
@@ -145,7 +152,7 @@ jitterplot <- function(xlist, xlabel_list, ylabel) {
     print(c('Debug', xnames[i], pos))
     #xj <- jitter(rep(pos, length(x)), amount=0.2)
     #xj <- get_jitter_gaussian(rep(pos,length(x)), amount=0.1)
-    xj <- get_jitter_exponential(rep(pos,length(x)), amount=0.05)
+    xj <- get_jitter_exponential(rep(pos,length(x)), amount=0.1)
 
     
     points(xj, x, col=xcol,pch=19 )
